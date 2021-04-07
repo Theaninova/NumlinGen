@@ -22,7 +22,7 @@ fun main() {
 
 package vector
 
-import kotlin.math.min
+import kotlin.math.sqrt
 
 // @formatter:off
 inline class ${type}Vector(val data: ${type}Array) {
@@ -45,12 +45,12 @@ inline class ${type}Vector(val data: ${type}Array) {
     
     /// Broadcast Primitive Operations
 ${primitiveOperations.joinToString("\n\n") { op -> types.joinToString("\n") { tp ->
-    "    operator fun $op(b: $tp) = ${conversion(type, tp)}Vector(shape) { data[it] ${opMap[op]} b }"
+"    operator fun $op(b: $tp) = ${conversion(type, tp)}Vector(shape) { data[it] ${opMap[op]} b }"
 }}}
     
     /// Primitive Vector Operations
 ${primitiveOperations.joinToString("\n\n") { op -> types.joinToString("\n") { tp ->
-    "    operator fun $op(b: ${tp}Vector) = ${conversion(type, tp)}Vector(min(shape, b.shape)) { data[it] ${opMap[op]} b[it] }"
+"    operator fun $op(b: ${tp}Vector) = ${conversion(type, tp)}Vector(shape) { data[it] ${opMap[op]} b[it] }"
 }}}
     
     /// Broadcasting Assign Operations
@@ -61,6 +61,11 @@ ${primitiveOperations.joinToString("\n") { op ->
     /// Assign Vector Operations
 ${primitiveOperations.joinToString("\n") { op ->
 "    operator fun ${op}Assign(b: ${type}Vector) = data.forEachIndexed { i, _ -> data[i] = (data[i] ${opMap[op]} b[i])${cast(type)} }"
+}}
+
+    /// Euclidean Distance (Range Operator)
+${types.joinToString("\n") { tp ->
+    "    operator fun rangeTo(other: ${tp}Vector) = sqrt(data.foldIndexed(0.0) { i, acc, d -> acc + (d - other[i]).let { it * it } })"
 }}
 }"""
         // @formatter:on
