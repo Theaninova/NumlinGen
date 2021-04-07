@@ -36,9 +36,9 @@ package vector
 
 /// GLSL-style swizzle operations
 ${types.joinToString("\n\n") { type -> xyzwPermutations.joinToString("\n") { permutation ->
-"val ${type}Vector.$permutation get() = ${type}Vector(${type.toLowerCase()}ArrayOf(${permutation.map { xyzwIndex[it] }
-    .joinToString(", ") { "this[$it]"}}))"
-}}}
+"val ${type}Vector.$permutation get() = ${if (permutation.length == 1) "this[${xyzwIndex[permutation.first()]}]" else
+    "${type}Vector(${type.toLowerCase()}ArrayOf(${permutation.map { xyzwIndex[it] }.joinToString(", ") {
+        "this[$it]"}}))"}"}}}
 """
     // @formatter:on
     file.writeText(content)
