@@ -22,6 +22,7 @@ fun main() {
 
 package vector
 
+import kotlin.math.min
 import kotlin.math.sqrt
 
 // @formatter:off
@@ -34,8 +35,9 @@ inline class ${type}Vector(val data: ${type}Array) {
     val shape get() = data.size
 
     /// Index Access
-    operator fun get(i: Int) = data[i]
-    operator fun set(i: Int, value: $type) = run { data[i] = value }
+    operator fun get(i: Int) = data[min(i, data.size + i)]
+    operator fun set(i: Int, value: $type) = run { data[min(i, data.size + i)] = value }
+    operator fun get(i: IntProgression) = ${type}Vector((i.last - i.first + 1) / i.step) { get(it) }
     
     /// Unary operations
     operator fun unaryPlus()  = ${conversion(type)}Vector(data.size) { +data[it] }
