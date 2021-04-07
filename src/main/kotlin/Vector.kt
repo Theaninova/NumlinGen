@@ -54,18 +54,23 @@ ${primitiveOperations.joinToString("\n\n") { op -> types.joinToString("\n") { tp
 }}}
     
     /// Broadcasting Assign Operations
-${primitiveOperations.joinToString("\n") { op ->
-"    operator fun ${op}Assign(b: $type) = data.forEachIndexed { i, _ -> data[i] = (data[i] ${opMap[op]} b)${cast(type)} }"
+${primitiveOperations.joinToString("\n") {
+"    operator fun ${it}Assign(b: $type) = data.forEachIndexed { i, _ -> data[i] = (data[i] ${opMap[it]} b)${cast(type)} }"
 }}
     
     /// Assign Vector Operations
-${primitiveOperations.joinToString("\n") { op ->
-"    operator fun ${op}Assign(b: ${type}Vector) = data.forEachIndexed { i, _ -> data[i] = (data[i] ${opMap[op]} b[i])${cast(type)} }"
+${primitiveOperations.joinToString("\n") {
+"    operator fun ${it}Assign(b: ${type}Vector) = data.forEachIndexed { i, _ -> data[i] = (data[i] ${opMap[it]} b[i])${cast(type)} }"
 }}
 
     /// Euclidean Distance (Range Operator)
-${types.joinToString("\n") { tp ->
-    "    operator fun rangeTo(other: ${tp}Vector) = sqrt(data.foldIndexed(0.0) { i, acc, d -> acc + (d - other[i]).let { it * it } })"
+${types.joinToString("\n") {
+    "    operator fun rangeTo(other: ${it}Vector) = sqrt(data.foldIndexed(0.0) { i, acc, d -> acc + (d - other[i]).let { it * it } })"
+}}
+
+    /// Component operator (destructuring)
+${(0..9).joinToString("\n") {
+    "    operator fun component$it() = data[$it]"
 }}
 }"""
         // @formatter:on
