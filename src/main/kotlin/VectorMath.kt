@@ -37,6 +37,12 @@ ${types.joinToString("\n") { t1 ->
 ${types.joinToString("\n") { t1 ->
     "val ${t1}Vector.length get() = sqrt(data.fold(0.0) { acc, d -> acc + d * d })"
 }}
+
+
+/// Normalized Vector
+${types.joinToString("\n") { t1 ->
+    "val ${t1}Vector.normalized get() = this / length"
+}}
 """
     // @formatter:on
     file.writeText(content)
